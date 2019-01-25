@@ -287,7 +287,7 @@ namespace CS8._0
         private static void WriteToAFile()
         {
             using var sw = new StreamWriter(File.OpenWrite("bla.txt"));
-            sr.WriteLine("Hellooo!");
+            sw.WriteLine("Hellooo!");
         } // disposed
 
         #endregion
