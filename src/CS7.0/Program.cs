@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CS7._0
@@ -7,18 +9,22 @@ namespace CS7._0
     {
         static void Main(string[] args)
         {
-            OutVariables();
+            //OutVariables();
+            //
+            //Tuples();
+            //
+            //Discards();
 
-            Tuples();
+            //PatternMatching();
 
-            Discards();
+            //RefsLocalsAndReturns();
 
-            PatternMatching();
+            LocalFunctions();
 
-            ThrowExpressions();
+            //ThrowExpressions();
 
-            Console.WriteLine("Press any key to end...");
-            Console.ReadKey();
+            //Console.WriteLine("Press any key to end...");
+            //Console.ReadKey();
         }
 
         #region Out Variables
@@ -36,7 +42,7 @@ namespace CS7._0
             // Example 2
             Console.WriteLine("Give me a number");
             var input = Console.ReadLine();
-            if(int.TryParse(input, out int value))
+            if (int.TryParse(input, out int value))
             {
                 var message = value % 2 == 0 ? "even" : "odd";
                 Console.WriteLine($"The number is {message}");
@@ -152,7 +158,7 @@ namespace CS7._0
 
         private static void IsItARectangle(object obj)
         {
-            if(obj is Rectangle)
+            if (obj is Rectangle)
             {
                 Console.WriteLine("Yup");
             }
@@ -172,26 +178,168 @@ namespace CS7._0
 
         private static void PatternMatching()
         {
+            var inputs = new List<object> { 2, new object(), new Rectangle(2, 2), 4, 7, new List<object>(), 10, new List<object> { 2, 4, new object() } };
+            Console.WriteLine($"The sum is: {SumAllInts(inputs)}");
 
+            Console.WriteLine($"The new sum is: {MoreSumInts(inputs)}");
+        }
+
+        private static int SumAllInts(IEnumerable<object> values)
+        {
+            int sum = 0;
+            foreach (var value in values)
+            {
+                if (value is int number)
+                {
+                    sum += number;
+                }
+            }
+
+            return sum;
+        }
+
+        public static int MoreSumInts(IEnumerable<object> values)
+        {
+            var sum = 0;
+            foreach (var item in values)
+            {
+                switch (item)
+                {
+                    case 0:
+                        break;
+                    case int val:
+                        sum += val;
+                        break;
+                    case IEnumerable<object> subList when subList.Any():
+                        sum += MoreSumInts(subList);
+                        break;
+                    case IEnumerable<object> subList:
+                        break;
+                    case null:
+                        break;
+                    default:
+                        Console.WriteLine("unknown item type");
+                        break;
+                }
+            }
+            return sum;
         }
 
         #endregion
 
         #region Ref locals and returns
 
+        private static void RefsLocalsAndReturns()
+        {
+            var array = new int[] { 2, 3, 4, 5, 6, 7, 8 };
+            Console.WriteLine();
+            Console.WriteLine("Original: ");
+            PrintArray(array);
 
+            var firstOdd = FindFirstValueInArray(array, false);
+            firstOdd = 99;
+            Console.WriteLine("Find simple value: ");
+            PrintArray(array);
+
+            firstOdd = FindFirstValueInArrayAsRef(array, false);
+            firstOdd = 99;
+            Console.WriteLine("Find with ref: ");
+            PrintArray(array);
+
+
+            ref var firstOddRef = ref FindFirstValueInArrayAsRef(array, false);
+            firstOddRef = 99;
+            Console.WriteLine("Find with ref proper way: ");
+            PrintArray(array);
+        }
+
+        private static int FindFirstValueInArray(int[] array, bool isEven)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if ((array[i] % 2 == 0 && isEven) || (array[i] % 2 == 1 && !isEven))
+                {
+                    return array[i];
+                }
+            }
+
+            return -1;
+        }
+
+        private static ref int FindFirstValueInArrayAsRef(int[] array, bool isEven)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if ((array[i] % 2 == 0 && isEven) || (array[i] % 2 == 1 && !isEven))
+                {
+                    return ref array[i];
+                }
+            }
+
+            throw new InvalidOperationException("Not found");
+        }
+
+        private static void PrintArray(int[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write($"{array[i]} ");
+            }
+            Console.WriteLine();
+        }
 
         #endregion
 
         #region Local functions
 
+        private static void LocalFunctions()
+        {
+            var resultSet = AlphabetSubset('a', 'f');
+            Console.WriteLine("iterator created");
+            foreach (var thing in resultSet)
+                Console.Write($"{thing}, ");
+        }
 
+        public static IEnumerable<char> AlphabetSubset(char start, char end)
+        {
+            if (start < 'a' || start > 'z')
+                throw new ArgumentOutOfRangeException(paramName: nameof(start), message: "start must be a letter");
+            if (end < 'a' || end > 'z')
+                throw new ArgumentOutOfRangeException(paramName: nameof(end), message: "end must be a letter");
+
+            if (end <= start)
+                throw new ArgumentException($"{nameof(end)} must be greater than {nameof(start)}");
+
+            return alphabetSubsetImplementation();
+
+            IEnumerable<char> alphabetSubsetImplementation()
+            {
+                for (var c = start; c < end; c++)
+                    yield return c;
+            }
+        }
 
         #endregion
 
         #region More expression-bodied members
 
+        internal class ExpressionMembersExample
+        {
+            // Expression-bodied constructor
+            public ExpressionMembersExample(string label) => this.Label = label;
 
+            // Expression-bodied finalizer
+            ~ExpressionMembersExample() => Console.Error.WriteLine("Finalized!");
+
+            private string label;
+
+            // Expression-bodied get / set accessors.
+            public string Label
+            {
+                get => label;
+                set => this.label = value ?? "Default label";
+            }
+        }
 
         #endregion
 
@@ -213,7 +361,28 @@ namespace CS7._0
 
         #region Generalized async return types
 
+        // Add the System.Threading.Tasks.Extensions nuget package
 
+        public async ValueTask<int> Func()
+        {
+            await Task.Delay(100);
+            return 5;
+        }
+
+        public ValueTask<int> CachedFunc()
+        {
+            return (cache) ? new ValueTask<int>(cacheResult) : new ValueTask<int>(LoadCache());
+        }
+        private bool cache = false;
+        private int cacheResult;
+        private async Task<int> LoadCache()
+        {
+            // simulate async work:
+            await Task.Delay(100);
+            cacheResult = 100;
+            cache = true;
+            return cacheResult;
+        }
 
         #endregion
 
