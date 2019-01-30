@@ -58,30 +58,29 @@ namespace CS8._0
 
         #region Asynchronous streams
 
-        //private static async Task AsyncStreams()
-        //{
-        //    await foreach(var name in GetNamesAsync())
-        //    {
-        //        Console.WriteLine($"Async name: {name}");
-        //    }
-        //}
+        private static async Task AsyncStreams()
+        {
+            await foreach (var name in GetNamesAsync())
+            {
+                Console.WriteLine($"Async name: {name}");
+            }
+        }
 
-        // Must wait for .NET Core 3.0 Preview 2 to get the compiler in sync with the interface in the framework
-        //private async static IAsyncEnumerable<string> GetNamesAsync()
-        //{
-        //    string[] names =
-        //    {
-        //        "Archimedes", "Pythagoras", "Euclid", "Socrates", "Plato"
-        //    };
+        private async static IAsyncEnumerable<string> GetNamesAsync()
+        {
+            string[] names =
+            {
+                "Archimedes", "Pythagoras", "Euclid", "Socrates", "Plato"
+            };
 
-        //    foreach(var name in names[0..^0])
-        //    {
-        //        await Task.Delay(500);
-        //        yield return name;
-        //    }
-        //} 
+            foreach (var name in names[0..^0])
+            {
+                await Task.Delay(500);
+                yield return name;
+            }
+        }
 
-        #endregion 
+        #endregion
 
         #region Default implementations of interface members
 

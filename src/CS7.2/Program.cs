@@ -15,7 +15,7 @@ namespace CS7._2
 
         private protected class Test
         {
-            protected int a;
+            private protected int a;
         }
 
         private protected class SimpleTest : Test

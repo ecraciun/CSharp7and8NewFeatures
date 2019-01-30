@@ -42,7 +42,7 @@ namespace CS7._0
             // Example 2
             Console.WriteLine("Give me a number");
             var input = Console.ReadLine();
-            if (int.TryParse(input, out int value))
+            if (int.TryParse(input, out var value))
             {
                 var message = value % 2 == 0 ? "even" : "odd";
                 Console.WriteLine($"The number is {message}");
@@ -158,7 +158,7 @@ namespace CS7._0
 
         private static void IsItARectangle(object obj)
         {
-            if (obj is Rectangle)
+            if (obj is Rectangle _)
             {
                 Console.WriteLine("Yup");
             }
