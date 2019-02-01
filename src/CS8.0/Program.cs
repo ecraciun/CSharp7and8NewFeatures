@@ -19,7 +19,7 @@ namespace CS8._0
 
             // RangesAndIndices();
 
-            // await AsyncStreams();
+            await AsyncStreams();
 
             // RecursivePatterns();
 
@@ -185,7 +185,11 @@ namespace CS8._0
 
         #region Target-typed new-expressions
 
+        //Point[] points = { new (1, 2), new (2,2) };
         //Rectangle[] rectangles = { new (1, 2) };
+        //Dictionary<string, List<int>> field = new () {
+        //    { "item1", new() { 1, 2, 3 } }
+        //};
 
         #endregion
 
@@ -256,13 +260,13 @@ namespace CS8._0
 
         static State ChangeState(State current, Transition transition, bool hasKey) =>
             (current, transition, hasKey) switch
-            {
-                (State.Opened, Transition.Close, _) => State.Closed,
-                (State.Closed, Transition.Open, _) => State.Opened,
-                (State.Closed, Transition.Lock, true) => State.Locked,
-                (State.Locked, Transition.Unlock, true) => State.Closed,
-                _ => throw new InvalidOperationException($"Invalid transition")
-            };
+        {
+            (State.Opened, Transition.Close, _) => State.Closed,
+            (State.Closed, Transition.Open, _) => State.Opened,
+            (State.Closed, Transition.Lock, true) => State.Locked,
+            (State.Locked, Transition.Unlock, true) => State.Closed,
+            _ => throw new InvalidOperationException($"Invalid transition")
+        };
 
         internal enum State
         {
